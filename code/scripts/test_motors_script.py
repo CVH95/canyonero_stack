@@ -1,5 +1,6 @@
 #!/usr/bin/python
 # SIMPLE MOTOR TEST
+# 4-pin Connection
 
 import RPi.GPIO as gpio
 import time
@@ -82,4 +83,4 @@ print("Canyonero turning left on spot")
 print("...")
 turn_left_onSpot(0.3)
 
-print("\n\n End of the test")
+print("\n\nEnd of the test")

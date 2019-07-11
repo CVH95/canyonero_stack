@@ -1,43 +1,44 @@
 #!/usr/bin/python
 # SIMPLE PWM TEST
+# 6-pin Connection
 
 import RPi.GPIO as gpio
 import time
 
-def init():
-    gpio.setmode(gpio.BCM)
-    
-    #Enable pins
-    pwm_left = gpio.PWM(16, gpio.OUT)
-    pwm_right = gpio.PWM(20, gpio.OUT)
-    
-    # Motor pins 
-    gpio.setup(17, gpio.OUT)
-    gpio.setup(22, gpio.OUT)
-    gpio.setup(23, gpio.OUT)
-    gpio.setup(24, gpio.OUT)
-    pwm_left = gpio.PWM(16, 100)
-    pwm_right = gpio.PWM(20, 100)
+print("CANYONERO \n\n")
+print("Simple PWM Test")
+print("...")
+time.sleep(3)
 
-def move_forward(t_s):
-    gpio.output(17, True)
-    gpio.output(22, False)
-    gpio.output(23, True)
-    gpio.output(24, False)
-    time.sleep(t_s)
+gpio.setmode(gpio.BCM)
     
+# Motor pins 
+gpio.setup(17, gpio.OUT)
+gpio.setup(22, gpio.OUT)
+gpio.setup(23, gpio.OUT)
+gpio.setup(24, gpio.OUT)
+
+#Enable pins
+gpio.setup(16, gpio.OUT)
+gpio.setup(20, gpio.OUT)
+
 # Set PWM duty cycles
-init()
+pwm_left = gpio.PWM(16, 100)
+pwm_right = gpio.PWM(20, 100)
 pwm_left.start(50)
-pwm_right.start(20)
+pwm_right.start(50)
 
 # Move
 print("Canyonero moving forward")
 print("...")
-move_forward(10)
+gpio.output(17, gpio.HIGH)
+gpio.output(22, gpio.LOW)
+gpio.output(23, gpio.HIGH)
+gpio.output(24, gpio.LOW)
+time.sleep(3)
 
 gpio.cleanup()
-print("\n\n End of the test")
+print("\n\nEnd of the test")
 
 
 
