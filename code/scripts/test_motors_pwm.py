@@ -39,6 +39,3 @@ time.sleep(3)
 
 gpio.cleanup()
 print("\n\nEnd of the test")
-
-
-

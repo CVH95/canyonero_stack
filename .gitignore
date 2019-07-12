@@ -1,1 +1,4 @@
 # Ignore files in:
+code/bin/
+code/build/
+code/libs/
