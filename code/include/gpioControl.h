@@ -10,8 +10,12 @@
 #define GPIOCONTROL_H
 
 #include<iostream>
+#include<unistd.h>
 #include<wiringPi.h>
-#include <softPwm.h>
+#include<softPwm.h>
+#include<stdio.h>
+#include<curses.h>
+#include<string.h>
 
 using namespace std;
 
@@ -27,7 +31,39 @@ class gpioControl
 {
 
     public:
-
+    
+        // Constructor
+        gpioControl();
+        
+        // Destructor
+        ~gpioControl();
+        
+        // Public Methods
+        void move_forward();
+        void move_backward();
+        void turn_right_onSpot();    
+        void turn_left_onSpot();
+        void stop_robot();
+        
+        void increaseSpeed();
+        void decreaseSpeed();
+        void setSpeed(int value);
+        int getSpeed();
+        
+        void SleeP(unsigned int seconds);
+        
+        void info_teleop();
+        bool keyboard_remote_control();
+        void start_ncurses();
+        void end_ncurses();
+        
+        
+    private:
+        
+        // Private Variables
+        int dutyCycleValue = 50;
+        string dir = "STOP";
+        WINDOW * win;
 };
 
 #endif //GPIOCONTROL_H
