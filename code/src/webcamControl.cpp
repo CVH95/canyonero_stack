@@ -32,31 +32,6 @@ webcamControl::~webcamControl()
 }
 
 
-//  Video streaming
-bool webcamControl::streamVideo()
-{
-	bool isStreaming = true;
-	
-	// Create  Mat container for video frames
-	Mat frame;
-	cap >> frame;
-	
-	// Resize frames
-	resize(frame, frame, Size(size_length, size_height));
-	
-	if(frame.empty())
-	{
-		return false;
-	}
-	
-	imshow("Canyonero View", frame);
-	
-	waitKey(10000);
-	
-	return isStreaming;
-}
-
-
 // Video Streaming 
 void webcamControl::streaming()
 {	
@@ -75,6 +50,31 @@ void webcamControl::streaming()
 		}
 		
 		imshow("Canyonero View", frame);
+		
+		waitKey(30);
+	}	
+}
+
+
+// Saves frames in order to be read by webServer
+void webcamControl::online_streaming()
+{	
+	// Create  Mat container for video frames
+	for(;;)
+	{
+		Mat frame;
+		cap >> frame;
+		
+		// Resize frames
+		resize(frame, frame, Size(size_length, size_height));
+		
+		if(frame.empty())
+		{
+			cout << "Signal went missing" << endl;
+		}
+		
+		//imshow("Canyonero View", frame);
+		imwrite("/home/pi/Workspace/Canyonero/code/webServer/FlaskApp/templates/frame.png", frame);
 		
 		waitKey(30);
 	}	

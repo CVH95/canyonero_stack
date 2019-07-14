@@ -27,8 +27,8 @@ class webcamControl
 			~webcamControl();
 			
 			// Public methods
-			bool streamVideo();
 			void streaming();
+			void online_streaming();
 			void getResolution();
 			
 			// Public Variables

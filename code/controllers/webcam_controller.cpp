@@ -22,7 +22,8 @@ int main(int argc, char** argv)
 	
 	// Streaming Loop
 	//while(wcam->streamVideo()){}
-	wcam->streaming();
+	//wcam->streaming();
+	wcam->online_streaming();
 	
 	return 0;
 }

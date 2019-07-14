@@ -1,0 +1,30 @@
+<!DOCTYPE html>
+<html>
+	<head>
+		<meta charset="utf-8"/>
+	</head>
+	<body>
+		<h1>CANYONERO</h1>
+		<hr>
+		<h3>Onboard WebCam Server</h3>
+		<img id="fr" src="{{ url_for('video_feed') }}" alt="Onboard Video Stream"></img>
+		<!--<script>
+			function updateImage()
+			{
+				fetch("/home/pi/Workspace/Canyonero/code/webServer/FlaskApp/templates/frame.png")
+					.then(response => response.blob())
+					.then(function(myBlob){
+						URL.revokeObjectURL(my_img.src);
+						my_img.src = URL.createObjectURL(myBlob);
+					});
+			}
+			const my_interval = setInterval(updateImage, 200);
+		</script>-->
+		<hr>
+		<p>Date/Time: <span id="datetime"></span></p>
+		<script>
+			var dt = new Date();
+			document.getElementById("datetime").innerHTML = dt.toUTCString();
+		</script>
+	</body>
+</html>

@@ -2,3 +2,5 @@
 code/bin/
 code/build/
 code/libs/
+code/webServer/venv/
+code/webServer/FlaskApp/__pycache__
