@@ -4,3 +4,4 @@ code/build/
 code/libs/
 code/webServer/venv/
 code/webServer/FlaskApp/__pycache__
+code/webServer/FlaskApp/camera_module.pyc
