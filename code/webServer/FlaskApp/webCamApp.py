@@ -38,6 +38,10 @@ def gen():
 @app.route("/video_feed")
 def video_feed():
     return Response(gen(),mimetype='multipart/x-mixed-replace; boundary=frame')
+
+@app.route("/info")
+def online_info():
+    return render_template('info_robot.html')
     
 
 if __name__ == "__main__":

@@ -1,0 +1,61 @@
+<!DOCTYPE html>
+<html>
+	<head>
+		<meta charset="utf-8"/>
+	</head>
+	<body>
+		<h1>CANYONERO</h1>
+		<h2>Quick online wiki</h2>
+		<hr>
+		<h3>A. Robot Design</h3>
+		<h4>Components:</h4>
+		<ul>
+			<li>Raspberry Pi 3B</li>
+			<li>L298N H-Bridge</li>
+			<li>CREATIVE 720p USB webcam</li>
+			<li>4TRONIX INITIO chasis</li>
+			<li>RPi UPS POWERPACK</li>
+			<li>HC-SR04 Ultrasonic sensor (not operative yet)</li>
+			<li>LED lights for night vision (not operative yet)</li>
+		</ul>
+		<h4>State of development:</h4>
+		<h5>Canyonero Software v1.0</h5>
+		<p>Keyboard remote control.<br/>
+		Online video streaming via WiFi.<br/>
+		Software: https://github.com/CVH95/Canyonero.git<br/>
+		C++ and Python supported.<br/>
+		</p>
+		<h3>B: Control Instructions</h3>
+		<h4>Keyboard remote control</h4>
+		<p>Forward: w<br/>
+		   Backward: s<br/>
+		   Turn right (on spot): d<br/>
+		   Turn left (on spot): a<br/>
+		   Stop: b<br/>
+		   Increase speed: k<br/>
+           Reduce speed: j<br/>
+           Exit program: p<br/>
+		</p>
+		<h4>WebApp Links:</h4>
+		<ul>
+		<li>Main page: http://**canyonero-ip-address**:5000/</li>
+		<li>Quick online wiki: http://**canyonero-ip-address**:5000/info</li>
+		</ul>
+		<hr>
+		<h4>@CVH95</h4>
+		<p>Date / Time: <span id="date"></span> / <span id="time"></span></p>
+		<script>
+				var dt = new Date();
+				document.getElementById("date").innerHTML = dt.toDateString();		
+		</script>
+		<script>
+			var tt = setInterval(Timers, 1000)
+			
+			function Timers(){
+					var d = new Date();
+					var T = d.toLocaleTimeString();
+					document.getElementById("time").innerHTML = T;
+			}
+		</script>
+	</body>
+</html>
