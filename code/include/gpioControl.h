@@ -9,13 +9,13 @@
 #ifndef GPIOCONTROL_H
 #define GPIOCONTROL_H
 
-#include<iostream>
-#include<unistd.h>
-#include<wiringPi.h>
-#include<softPwm.h>
-#include<stdio.h>
-#include<curses.h>
-#include<string.h>
+#include <iostream>
+#include <unistd.h>
+#include <wiringPi.h>
+#include <softPwm.h>
+#include <stdio.h>
+#include <curses.h>
+#include <string.h>
 
 using namespace std;
 
@@ -54,14 +54,19 @@ class gpioControl
         
         void info_teleop();
         bool keyboard_remote_control();
+        void ros_gpio_interface(int D);
         void start_ncurses();
         void end_ncurses();
+        
+        // Public variables
+        string state ="STOP";
         
         
     private:
         
         // Private Variables
         int dutyCycleValue = 50;
+        int Direction = 0;
         string dir = "STOP";
         WINDOW * win;
 };

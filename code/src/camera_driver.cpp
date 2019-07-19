@@ -6,11 +6,11 @@
 // Video Stream
 // Configure video broadcast server
 
-#include "webcamControl.h"
+#include "camera_driver.h"
 
 
 // Constructor
-webcamControl::webcamControl(int length, int height)
+camera_driver::camera_driver(int length, int height)
 {
 	if(length != 0 && height != 0)
 	{
@@ -26,14 +26,14 @@ webcamControl::webcamControl(int length, int height)
 
 
 // Destructor
-webcamControl::~webcamControl()
+camera_driver::~camera_driver()
 {
 	cout << "Canyonero's webcam is out" << endl;
 }
 
 
 // Video Streaming 
-void webcamControl::streaming()
+void camera_driver::streaming()
 {	
 	// Create  Mat container for video frames
 	for(;;)
@@ -57,7 +57,7 @@ void webcamControl::streaming()
 
 
 // Saves frames in order to be read by webServer
-void webcamControl::online_streaming()
+void camera_driver::online_streaming()
 {	
 	// Create  Mat container for video frames
 	for(;;)
@@ -81,8 +81,26 @@ void webcamControl::online_streaming()
 }
 
 
+// Obtain frame for ROS control
+Mat camera_driver::get_frame()
+{
+	Mat frame;
+	cap >> frame;
+	
+	// Resize frames
+	resize(frame, frame, Size(size_length, size_height));
+	
+	if(frame.empty())
+	{
+		cout << "Signal went missing" << endl;
+	}
+	
+	return frame;
+}
+
+
 // Print Resolution
-void webcamControl::getResolution()
+void camera_driver::get_resolution()
 {
 	cout << "Stream resolution: " << size_length << "x" << size_height << "." << endl; 
 }

@@ -12,31 +12,31 @@
 // Constructor
 gpioControl::gpioControl()
 {
-		if(wiringPiSetupGpio() == -1)
-		{
-			cout << "WiringPi failed to set up GPIOs" << endl;
-			//return 1;
-		}
-		
-		// Motor Pins
-		pinMode(Motor1, OUTPUT);
-		pinMode(Motor2, OUTPUT);
-		pinMode(Motor3, OUTPUT);
-		pinMode(Motor4, OUTPUT);
-		
-		// Enable Pins
-		pinMode(Enable1, OUTPUT);
-		pinMode(Enable2, OUTPUT);
-		
-		// Create PWMs
-		softPwmCreate(Enable1, 0 , 100);
-		softPwmCreate(Enable2, 0 , 100);
-		
-		// Initiate (all motors LOW)
-		digitalWrite(Motor1, 0);
-		digitalWrite(Motor2, 0);
-		digitalWrite(Motor3, 0);
-		digitalWrite(Motor4, 0);
+	if(wiringPiSetupGpio() == -1)
+	{
+		cout << "WiringPi failed to set up GPIOs" << endl;
+		//return 1;
+	}
+	
+	// Motor Pins
+	pinMode(Motor1, OUTPUT);
+	pinMode(Motor2, OUTPUT);
+	pinMode(Motor3, OUTPUT);
+	pinMode(Motor4, OUTPUT);
+	
+	// Enable Pins
+	pinMode(Enable1, OUTPUT);
+	pinMode(Enable2, OUTPUT);
+	
+	// Create PWMs
+	softPwmCreate(Enable1, 0 , 100);
+	softPwmCreate(Enable2, 0 , 100);
+	
+	// Initiate (all motors LOW)
+	digitalWrite(Motor1, 0);
+	digitalWrite(Motor2, 0);
+	digitalWrite(Motor3, 0);
+	digitalWrite(Motor4, 0);
 }
 
 
@@ -186,63 +186,94 @@ void gpioControl::info_teleop()
 // Keyboard remote control
 bool gpioControl::keyboard_remote_control()
 {		
-		int cht = 0;
-		
-		bool running = true;
-		int sp = dutyCycleValue;
-		
-		info_teleop();
-		
-		cht = getch();
-		
-		switch(cht)
-		{
-			case 'w':
-				move_forward();
-				dir = "FWRD";
-				running = true;
-				break;
-			case 's':
-				move_backward();
-				dir = "BACK";
-				running = true;
-				break;
-			case 'd':
-				turn_right_onSpot();
-				dir = "RGHT";
-				running = true;
-				break;
-			case 'a':
-				turn_left_onSpot();
-				dir = "LEFT";
-				running = true;
-				break;
-			case 'b':
-				stop_robot();
-				dir = "STOP";
-				running = true;
-				break;
-			case 'k':
-				increaseSpeed();
-				running = true;
-				break;
-			case 'j':
-				decreaseSpeed();
-				running = true;
-				break;
-			case 'p':
-				stop_robot();
-				move(15, 0);
-				printw("Shutting down Canyonero");
-				SleeP(1);
-				//cout << endl << "Shutting down Canyonero" << endl;
-				running = false;
-				break;
-		}
-		
-		wrefresh(win);
-		
-		return running;
+	int cht = 0;
+	
+	bool running = true;
+	int sp = dutyCycleValue;
+	
+	info_teleop();
+	
+	cht = getch();
+	
+	switch(cht)
+	{
+		case 'w':
+			move_forward();
+			dir = "FWRD";
+			running = true;
+			break;
+		case 's':
+			move_backward();
+			dir = "BACK";
+			running = true;
+			break;
+		case 'd':
+			turn_right_onSpot();
+			dir = "RGHT";
+			running = true;
+			break;
+		case 'a':
+			turn_left_onSpot();
+			dir = "LEFT";
+			running = true;
+			break;
+		case 'b':
+			stop_robot();
+			dir = "STOP";
+			running = true;
+			break;
+		case 'k':
+			increaseSpeed();
+			running = true;
+			break;
+		case 'j':
+			decreaseSpeed();
+			running = true;
+			break;
+		case 'p':
+			stop_robot();
+			move(15, 0);
+			printw("Shutting down Canyonero");
+			SleeP(1);
+			//cout << endl << "Shutting down Canyonero" << endl;
+			running = false;
+			break;
+	}
+	
+	wrefresh(win);
+	
+	return running;
+}
+
+
+// GPIO interface
+void gpioControl::ros_gpio_interface(int D)
+{
+	switch(D)
+	{
+		case 8:
+			move_forward();
+			state = "MOVING FORWARD";
+		case 2:
+			move_backward();
+			state = "MOVING BACKWARD";
+		case 6:
+			turn_right_onSpot();
+			state = "TURNING RIGHT";
+		case 4:
+			turn_left_onSpot();
+			state = "TURNING LEFT";
+		case 0:
+			stop_robot();
+			state = "STOPPED";
+		case 9:
+			increaseSpeed();
+		case 7:
+			decreaseSpeed();
+		case 5:
+			stop_robot();
+			state = "STOPPED";
+	}
 }
 
 

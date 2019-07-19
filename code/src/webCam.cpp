@@ -2,14 +2,14 @@
 
 // Onboard WebCam streaming
 
-#include "webcamControl.h"
+#include "camera_driver.h"
 
 int main(int argc, char** argv)
 {
 	cout << "CANYONERO" << endl << endl;
 	cout << "... Onboard Video Streaming ..." << endl;
 	
-	webcamControl * wcam = new webcamControl(0, 0);
+	camera_driver * wcam = new camera_driver(0, 0);
 	
 	// Check if the camera is working
 	if(!wcam->cap.open(0))
@@ -18,12 +18,12 @@ int main(int argc, char** argv)
 		return 0;
 	}
 	
-	wcam->getResolution();
+	wcam->get_resolution();
 	
 	// Streaming Loop
 	//while(wcam->streamVideo()){}
-	//wcam->streaming();
-	wcam->online_streaming();
+	wcam->streaming();
+	//wcam->online_streaming();
 	
 	return 0;
 }

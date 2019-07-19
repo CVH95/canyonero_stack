@@ -1,10 +1,7 @@
 cmake_minimum_required(VERSION 2.8.3)
-project(canyonero)
+project(Canyonero)
 
-# Finds
 find_package(OpenCV 3 REQUIRED)
-#find_package(WiringPi REQUIRED)
-#find_package(Threads REQUIRED) 
 find_library(wiringPi_LIB wiringPi)
 
 # Includes
@@ -15,15 +12,16 @@ include_directories(${OpenCV_INCLUDE_DIRS} include)
 set(EXECUTABLE_OUTPUT_PATH ${PROJECT_SOURCE_DIR}/bin)
 set(LIBRARY_OUTPUT_PATH ${PROJECT_SOURCE_DIR}/libs)
 
+# Add SHARED libraries
 add_library(gpioControl SHARED src/gpioControl.cpp)
-add_library(webcamControl SHARED src/webcamControl.cpp)
+add_library(camera_driver SHARED src/camera_driver.cpp)
 
 ############# EXECUTABLES #############
 
 # Build C++ Keyboard Teleoperation
-add_executable(keyboard_teleop controllers/keyboard_teleop.cpp)
-target_link_libraries(keyboard_teleop gpioControl ${wiringPi_LIB} ncurses)
+add_executable(keyboardTeleop src/keyboardTeleop.cpp)
+target_link_libraries(keyboardTeleop gpioControl ${wiringPi_LIB} ncurses)
 
 # Build WebCam Streaming
-add_executable(webcam_controller controllers/webcam_controller.cpp)
-target_link_libraries(webcam_controller webcamControl ${OpenCV_LIBS})
+add_executable(webCam src/webCam.cpp)
+target_link_libraries(webCam camera_driver ${OpenCV_LIBS})
