@@ -150,8 +150,8 @@ int gpioControl::getSpeed()
 // Sleep Function
 void gpioControl::SleeP(unsigned int seconds)
 {
-		unsigned int ti = seconds * 1000000;
-		usleep(ti);
+	unsigned int ti = seconds * 1000000;
+	usleep(ti);
 }
 
 
@@ -254,25 +254,33 @@ void gpioControl::ros_gpio_interface(int D)
 		case 8:
 			move_forward();
 			state = "MOVING FORWARD";
+			break;
 		case 2:
 			move_backward();
 			state = "MOVING BACKWARD";
+			break;
 		case 6:
 			turn_right_onSpot();
 			state = "TURNING RIGHT";
+			break;
 		case 4:
 			turn_left_onSpot();
 			state = "TURNING LEFT";
+			break;
 		case 0:
 			stop_robot();
 			state = "STOPPED";
+			break;
 		case 9:
 			increaseSpeed();
+			break;
 		case 7:
 			decreaseSpeed();
+			break;
 		case 5:
 			stop_robot();
 			state = "STOPPED";
+			break;
 	}
 }
 
