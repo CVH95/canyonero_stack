@@ -12,8 +12,8 @@ int main()
 	gpioControl * Canyonero = new gpioControl();
 	
 	Canyonero->setSpeed(50);
-	Canyonero->setPan(7, 0);
-	Canyonero->setTilt(11, 0);
+	//Canyonero->setPan(15, 0);
+	//Canyonero->setTilt(15, 0);
 	
 	cout << "Loading drivers and interface..." << endl;
 	Canyonero->SleeP(3);

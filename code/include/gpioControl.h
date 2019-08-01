@@ -14,6 +14,8 @@
 #include <wiringPi.h>
 #include <softPwm.h>
 #include <stdio.h>
+#include <stdlib.h>
+#include <stdint.h>
 #include <curses.h>
 #include <string.h>
 #include <cmath>
@@ -76,13 +78,17 @@ class gpioControl
         double tilt_toDeg(int dut);
         void setPan(double value, int unit);
         void setTilt(double value, int unit);
+        void open_platform();
+        void lock_platform();
         
         // Illumination
         void lights_on();
         void lights_off();
         
         // General Purpose
-        int getSpeed();        
+        int getSpeed();
+        double get_pan();
+        double get_tilt();      
         void SleeP(unsigned int seconds);
         void info_teleop();
         bool keyboard_remote_control();
@@ -93,18 +99,19 @@ class gpioControl
         // Public variables
         string state ="STOP";
         string led_state = "OFF";
-        
+        string platform_state ="LOCKED";
         
     private:
         
         // Private Variables
         int dutyCycleValue = 50;
-        int pan_DTC = 7;
-        int tilt_DTC = 11;
+        int pan_DTC = 15;
+        int tilt_DTC = 15;
         int Direction = 0;
         string dir = "STOP";
         WINDOW * win;
         bool are_on = false;
+        bool is_locked = true;
 };
 
 #endif //GPIOCONTROL_H

@@ -13,8 +13,8 @@ set(EXECUTABLE_OUTPUT_PATH ${PROJECT_SOURCE_DIR}/bin)
 set(LIBRARY_OUTPUT_PATH ${PROJECT_SOURCE_DIR}/libs)
 
 # Add SHARED libraries
-add_library(gpioControl SHARED src/gpioControl.cpp)
 add_library(camera_driver SHARED src/camera_driver.cpp)
+add_library(gpioControl SHARED src/gpioControl.cpp)
 
 ############# EXECUTABLES #############
 
