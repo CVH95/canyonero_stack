@@ -18,6 +18,9 @@ gpioControl::gpioControl()
 		//return 1;
 	}
 	
+	// This has to do with permissions to run hardware PWM
+	putenv("WIRINGPI_GPIOMEM=1");
+	
 	// DC Motor Pins
 	pinMode(Motor1, OUTPUT);
 	pinMode(Motor2, OUTPUT);
@@ -28,10 +31,6 @@ gpioControl::gpioControl()
 	pinMode(Enable1, OUTPUT);
 	pinMode(Enable2, OUTPUT);
 	
-	// Servo Motor Pins
-	pinMode(PAN, PWM_OUTPUT);
-	pinMode(TILT, PWM_OUTPUT);
-	
 	// LED Light Pins
 	pinMode(led_R, OUTPUT);
 	pinMode(led_L, OUTPUT);
@@ -40,8 +39,6 @@ gpioControl::gpioControl()
 	// Create PWMs
 	softPwmCreate(Enable1, 0 , 100);
 	softPwmCreate(Enable2, 0 , 100);
-	softPwmCreate(PAN, 0 , 200);
-	softPwmCreate(TILT, 0 , 200);
 	
 	// Initiate (all pins LOW)
 	digitalWrite(Motor1, 0);
@@ -53,9 +50,11 @@ gpioControl::gpioControl()
 }
 
 
-// Destructor
+// Destructor (clean up)
 gpioControl::~gpioControl()
 {
+	// Set all Values to low
+	
 	// DC Motors OFF
 	digitalWrite(Motor1, 0);
 	digitalWrite(Motor2, 0);
@@ -65,6 +64,21 @@ gpioControl::~gpioControl()
 	// Lights OFF
 	digitalWrite(led_R, 0);
 	digitalWrite(led_L, 0);
+	
+	// Set back to input mode
+	pinMode(Motor1, INPUT);
+	pinMode(Motor2, INPUT);
+	pinMode(Motor3, INPUT);
+	pinMode(Motor4, INPUT);
+	
+	// DC Motor Enable Pins
+	pinMode(Enable1, INPUT);
+	pinMode(Enable2, INPUT);
+	
+	// LED Light Pins
+	pinMode(led_R, INPUT);
+	pinMode(led_L, INPUT);
+	
 	
 	cout << "Canyonero is out" << endl;
 }
@@ -178,6 +192,7 @@ void gpioControl::rotate_up()
 	{
 		tilt_DTC = 1;	
 	}
+	
 	softPwmWrite(TILT, tilt_DTC);
 }
 
@@ -190,6 +205,7 @@ void gpioControl::rotate_down()
 	{
 		tilt_DTC = 199;	
 	}
+	
 	softPwmWrite(TILT, tilt_DTC);
 }
 
@@ -202,6 +218,7 @@ void gpioControl::rotate_right()
 	{
 		pan_DTC = 199;	
 	}
+	
 	softPwmWrite(PAN, pan_DTC);
 }
 
@@ -214,6 +231,7 @@ void gpioControl::rotate_left()
 	{
 		pan_DTC = 1;	
 	}
+	
 	softPwmWrite(PAN, pan_DTC);
 }
 
@@ -268,6 +286,7 @@ void gpioControl::setPan(double value, int unit)
 		double dtc = pan_toDutyCycle(value);
 		pan_DTC = (int) round(dtc); 
 	}
+	
 	softPwmWrite(PAN, pan_DTC);
 }
 
@@ -286,7 +305,37 @@ void gpioControl::setTilt(double value, int unit)
 		double dtc = tilt_toDutyCycle(value);
 		tilt_DTC = (int) round(dtc); 
 	}
+	
 	softPwmWrite(TILT, tilt_DTC);
+}
+
+
+// Create platform object
+void gpioControl::open_platform()
+{
+	is_locked = false;
+	platform_state = "OPENED";
+	
+	// Set pan/tilt GPIOs
+	pinMode(PAN, OUTPUT);
+	pinMode(TILT, OUTPUT);
+	
+	softPwmCreate(PAN, 0 , 200);
+	softPwmCreate(TILT, 0 , 200);
+	
+	setPan(15, 0);
+	setTilt(15, 0);
+}
+
+
+// Destroy platform object
+void gpioControl::lock_platform()
+{
+	pinMode(PAN, INPUT);
+	pinMode(TILT, INPUT);
+	
+	is_locked = true;
+	platform_state = "LOCKED";
 }
 
 
@@ -329,6 +378,23 @@ int gpioControl::getSpeed()
 }
 
 
+// Get PAN position in deg
+double gpioControl::get_pan()
+{
+	int d = pan_DTC;
+	double value = pan_toDeg(d);
+	return value;
+}
+
+
+// Get PAN position in deg
+double gpioControl::get_tilt()
+{
+	int d = tilt_DTC;
+	double value = tilt_toDeg(d);
+	return value;
+}
+
 // Sleep Function
 void gpioControl::SleeP(unsigned int seconds)
 {
@@ -364,26 +430,32 @@ void gpioControl::info_teleop()
 	move(13,0);
 	printw("VISION PLATFORM:");
 	move(15,0);
-	printw("  >> Rotate up: i");
+	printw("  >> Enable platform: t");
 	move(16,0);
-	printw("  >> Rotate Down: k");
+	printw("  >> Disable platform: y");
 	move(17,0);
-	printw("  >> Rotate right: l");
+	printw("  >> Rotate up: i");
 	move(18,0);
-	printw("  >> Rotate left:j");
+	printw("  >> Rotate Down: k");
 	move(19,0);
+	printw("  >> Rotate right: l");
+	move(20,0);
+	printw("  >> Rotate left:j");
+	move(21,0);
 	printw("  >> Lights: m");
 	
-	move(21,0);
-	printw("ROBOT STATE:");
 	move(23,0);
-	printw("  * Direction = %s", dir.c_str());
-	move(24,0);
-	printw("  * Current speed = %d (%)", dutyCycleValue);
+	printw("ROBOT STATE:");
 	move(25,0);
-	printw("  * Lights = %d", are_on);
+	printw("  * Direction = %s", dir.c_str());
 	move(26,0);
+	printw("  * Current speed = %d (%)", dutyCycleValue);
+	move(27,0);
+	printw("  * Lights = %d", are_on);
+	move(28,0);
 	printw("  * Camera (PAN, TILT) = (%.2f, %.2f) [deg]", pan_toDeg(pan_DTC), tilt_toDeg(tilt_DTC));
+	move(29,0);
+	printw("  * Platform = %s, %d", platform_state.c_str(), is_locked);
 }
 
 
@@ -439,19 +511,31 @@ bool gpioControl::keyboard_remote_control()
 			else{lights_off();}
 			break;
 		case 'i':
-			rotate_up();
+			if(!is_locked){rotate_up();}
+			else{platform_state="LOCKED";}
 			running = true;
 			break;
 		case 'k':
-			rotate_down();
+			if(!is_locked){rotate_down();}
+			else{platform_state="LOCKED";}
 			running = true;
 			break;
 		case 'l':
-			rotate_right();
+			if(!is_locked){rotate_right();}
+			else{platform_state="LOCKED";}
 			running = true;
 			break;
 		case 'j':
-			rotate_left();
+			if(!is_locked){rotate_left();}
+			else{platform_state="LOCKED";}
+			running = true;
+			break;
+		case 't':
+			open_platform();
+			running = true;
+			break;
+		case 'y':
+			lock_platform();
 			running = true;
 			break;
 		case 'p':
@@ -506,16 +590,26 @@ void gpioControl::ros_gpio_interface(int D)
 			else{lights_off();}
 			break;
 		case 21:
-			rotate_up();
+			if(!is_locked){rotate_up();}
+			else{platform_state="LOCKED";}
 			break;
 		case 22:
-			rotate_down();
+			if(!is_locked){rotate_down();}
+			else{platform_state="LOCKED";}
 			break;
 		case 23:
-			rotate_right();
+			if(!is_locked){rotate_right();}
+			else{platform_state="LOCKED";}
 			break;
 		case 24:
-			rotate_left();
+			if(!is_locked){rotate_left();}
+			else{platform_state="LOCKED";}
+			break;
+		case 31:
+			open_platform();
+			break;
+		case 32:
+			lock_platform();
 			break;
 		case 5:
 			stop_robot();
