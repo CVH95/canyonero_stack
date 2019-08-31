@@ -323,8 +323,8 @@ void gpioControl::open_platform()
 	softPwmCreate(PAN, 0 , 200);
 	softPwmCreate(TILT, 0 , 200);
 	
-	setPan(15, 0);
-	setTilt(15, 0);
+	setPan(pan_DTC, 0);
+	setTilt(tilt_DTC, 0);
 }
 
 
@@ -427,12 +427,10 @@ void gpioControl::info_teleop()
 	move(11,0);
 	printw("  >> Switch OFF Canyonero: p");
 	
-	move(13,0);
+	move(14,0);
 	printw("VISION PLATFORM:");
-	move(15,0);
-	printw("  >> Enable platform: t");
 	move(16,0);
-	printw("  >> Disable platform: y");
+	printw("  >> Unlock/Lock platform: t");
 	move(17,0);
 	printw("  >> Rotate up: i");
 	move(18,0);
@@ -531,11 +529,8 @@ bool gpioControl::keyboard_remote_control()
 			running = true;
 			break;
 		case 't':
-			open_platform();
-			running = true;
-			break;
-		case 'y':
-			lock_platform();
+			if(!is_locked){lock_platform();}
+			else{open_platform();}
 			running = true;
 			break;
 		case 'p':
@@ -605,11 +600,9 @@ void gpioControl::ros_gpio_interface(int D)
 			if(!is_locked){rotate_left();}
 			else{platform_state="LOCKED";}
 			break;
-		case 31:
-			open_platform();
-			break;
 		case 32:
-			lock_platform();
+			if(!is_locked){lock_platform();}
+			else{open_platform();}
 			break;
 		case 5:
 			stop_robot();
