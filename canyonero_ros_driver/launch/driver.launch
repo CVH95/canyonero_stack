@@ -1,0 +1,15 @@
+<?xml version="1.0"?>
+<launch>
+	<arg name="image_width" default="640"/>
+	<arg name="image_height" default="480"/>
+
+	<remap from="joint_direction" to="canyonero/joint_direction"/>
+	<node pkg="canyonero_ros_driver" type="commander" name="canyonero_commander_node" output="screen"></node>
+	
+	<remap from="joint_states" to="canyonero/joint_states"/>
+	<remap from="eye/image_raw" to="canyonero/eye/image_raw"/>
+	<node pkg="canyonero_ros_driver" type="feedback" name="canyonero_feedback_node" output="screen"></node>
+	<param name="image_width" type="int" value="$(arg image_width)"/>
+	<param name="image_height" type="int" value="$(arg image_height)"/>
+
+</launch>

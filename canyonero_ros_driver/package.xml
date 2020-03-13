@@ -1,0 +1,29 @@
+<?xml version="1.0"?>
+<package format="2">
+  <name>canyonero_ros_drivers</name>
+  <version>0.0.0</version>
+  <description>The canyonero canyonero_ros_driver package.</description>
+
+  <maintainer email="gitcvh95@gmail.com">Carlos</maintainer>
+
+  <license>MIT</license>
+
+  <!--   <doc_depend>doxygen</doc_depend> -->
+  <buildtool_depend>catkin</buildtool_depend>
+
+  <depend>rosconsole</depend>
+  <depend>roscpp</depend>
+  <depend>roslib</depend>
+  <depend>cv_bridge</depend>
+  <depend>geometry_msgs</depend>
+  <depend>image_transport</depend>
+  <depend>sensor_msgs</depend>
+  <depend>canyonero_msgs</depend>
+  <depend>canyonero</depend>
+
+  <!-- The export tag contains other, unspecified, tags -->
+  <export>
+    <!-- Other tools can request additional information be placed here -->
+  </export>
+
+</package>
